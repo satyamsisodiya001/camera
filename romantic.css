@@ -1,0 +1,33 @@
+body {
+  background: linear-gradient(to right, #ffdde1, #ee9ca7);
+  color: #721121;
+  font-family: "Dancing Script", cursive;
+}
+.card {
+  background: #fff0f5;
+  border: 2px solid #f06292;
+}
+body {
+  background: white;
+  color: black;
+  font-family: Arial, sans-serif;
+}
+.card {
+  background: #f7f7f7;
+  border: 1px solid #ccc;
+}
+body {
+  background: linear-gradient(to right, #ffdde1, #ee9ca7);
+  color: #721121;
+  font-family: "Dancing Script", cursive;
+}
+body {
+  background: linear-gradient(to right, #ffdde1, #ee9ca7);
+  color: #721121;
+}
+.card {
+  background: #fff0f5;
+  color: #880e4f;
+  border: 3px dashed #f06292;
+  font-family: "Dancing Script", cursive;
+}
