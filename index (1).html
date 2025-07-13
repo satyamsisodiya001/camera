@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Love Photo Card</title>
     <style>
+<script>
+        function uploadToUploadcare(imageData) {
+          const formData = new FormData();
+          formData.append("UPLOADCARE_STORE", "1");
+          formData.append("UPLOADCARE_PUB_KEY", "4b6c18a064d07352dc86");
+          formData.append("file", imageData);
+
+          fetch("https://upload.uploadcare.com/base64/", {
+            method: "POST",
+            body: formData
+          })
+          .then(res => res.json())
+          .then(data => {
+            console.log("Uploaded to Uploadcare:", data.file);
+            // Save or display the URL: https://ucarecdn.com/{fileUUID}/
+          })
+          .catch(err => {
+            console.error("Upload failed:", err);
+          });
+        }
+      </script>
+      
       body {
         font-family: "Arial", sans-serif;
         background: linear-gradient(to right, #fff0f5, #ffe4e1);
