@@ -79,67 +79,7 @@ function createPhotoCard() {
   const startX = (width - totalWidth) / 2;
   const y = 90;
 
-  const video = document.getElementById("video");
-const captureBtn = document.getElementById("capture-btn");
-const output = document.getElementById("output");
-
-// ✅ Start camera
-navigator.mediaDevices.getUserMedia({ video: true })
-  .then(stream => {
-    video.srcObject = stream;
-  })
-  .catch(err => {
-    alert("❌ Camera access denied!");
-    console.error(err);
-  });
-
-captureBtn.addEventListener("click", () => {
-  const canvas = document.createElement("canvas");
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-
-  const ctx = canvas.getContext("2d");
-  ctx.drawImage(video, 0, 0);
-
-  const imageData = canvas.toDataURL("image/png").split(',')[1]; // only base64 part
-
-  uploadToUploadcare(imageData);
-});
-
-function uploadToUploadcare(imageData) {
-  const formData = new FormData();
-  formData.append("UPLOADCARE_STORE", "1"); // 🔥 VERY IMPORTANT!
-  formData.append("UPLOADCARE_PUB_KEY", "your_public_key_here"); // 🛑 Replace this
-  formData.append("file", imageData);
-
-  fetch("https://upload.uploadcare.com/base64/", {
-    method: "POST",
-    body: formData
-  })
-  .then(res => res.json())
-  .then(data => {
-    const url = `https://ucarecdn.com/${data.file}/`;
-
-    // ✅ Display image
-    const img = document.createElement("img");
-    img.src = url;
-    img.className = "uploaded";
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.target = "_blank";
-    link.innerText = "🔗 Open uploaded photo";
-
-    output.innerHTML = "<h3>Uploaded Image:</h3>";
-    output.appendChild(img);
-    output.appendChild(document.createElement("br"));
-    output.appendChild(link);
-  })
-  .catch(err => {
-    console.error("❌ Upload failed:", err);
-    alert("Upload failed: " + err.message);
-  });
-}
+ 
 
   let loaded = 0;
 
