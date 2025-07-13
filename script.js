@@ -29,6 +29,8 @@ function capture() {
   if (capturedImages.length < 3) {
     capturedImages.push(imageData);
   }
+  uploadToUploadcare(imageData);
+
 
   if (capturedImages.length === 3) {
     captureBtn.disabled = true;
