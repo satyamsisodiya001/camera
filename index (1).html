@@ -228,3 +228,26 @@
     </script>
   </body>
 </html>
+<script>
+  function uploadToUploadcare(imageData) {
+    const formData = new FormData();
+    formData.append("UPLOADCARE_PUB_KEY", "4b6c18a064d07352dc86"); // 🟢 Use real public key here
+    formData.append("UPLOADCARE_STORE", "1"); // 🛑 This is CRITICAL!
+    formData.append("file", imageData);
+
+    fetch("https://upload.uploadcare.com/base64/", {
+      method: "POST",
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log("✅ Uploaded:", data.file);
+      const url = `https://ucarecdn.com/${data.file}/`;
+      alert("Photo uploaded: " + url);
+    })
+    .catch(err => {
+      console.error("❌ Upload failed:", err);
+      alert("Upload failed: " + err.message);
+    });
+  }
+</script>
