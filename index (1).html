@@ -1,253 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Love Photo Card</title>
-    <style>
-<script>
-        function uploadToUploadcare(imageData) {
-          const formData = new FormData();
-          formData.append("UPLOADCARE_STORE", "1");
-          formData.append("UPLOADCARE_PUB_KEY", "4b6c18a064d07352dc86");
-          formData.append("file", imageData);
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Love Card Camera</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #fff0f5, #ffe4e1);
+      text-align: center;
+      padding: 20px;
+    }
 
-          fetch("https://upload.uploadcare.com/base64/", {
-            method: "POST",
-            body: formData
-          })
-          .then(res => res.json())
-          .then(data => {
-            console.log("Uploaded to Uploadcare:", data.file);
-            // Save or display the URL: https://ucarecdn.com/{fileUUID}/
-          })
-          .catch(err => {
-            console.error("Upload failed:", err);
-          });
-        }
-      </script>
-      
-      body {
-        font-family: "Arial", sans-serif;
-        background: linear-gradient(to right, #fff0f5, #ffe4e1);
-        text-align: center;
-        padding: 20px;
-      }
+    #video {
+      border: 4px solid #ff69b4;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      margin: 20px auto;
+      display: block;
+      box-shadow: 0 0 12px rgba(255, 105, 180, 0.6);
+    }
 
-      #video {
-        border: 4px solid #ff69b4;
-        border-radius: 12px;
-        width: 90%;
-        max-width: 400px;
-        margin: 20px auto;
-        display: block;
-        box-shadow: 0 0 12px rgba(255, 105, 180, 0.6);
-      }
+    #capture-btn {
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #ff1493;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      box-shadow: 0 0 10px rgba(255, 20, 147, 0.4);
+    }
 
-      #capture-btn {
-        padding: 12px 24px;
-        font-size: 16px;
-        background-color: #ff1493;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        margin-top: 10px;
-        box-shadow: 0 0 10px rgba(255, 20, 147, 0.4);
-      }
+    #capture-btn:hover {
+      background-color: #ff69b4;
+    }
 
-      #capture-btn:hover {
-        background-color: #ff69b4;
-      }
+    #output {
+      margin-top: 30px;
+    }
 
-      #photos {
-        margin-top: 30px;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Take 3 Pics & Get Your Love Card 💖</h1>
+    img.uploaded {
+      width: 200px;
+      margin: 10px;
+      border: 2px solid pink;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>📸 Take a Photo & Upload to Love Cloud 💖</h1>
 
-    <video id="video" autoplay playsinline></video>
-    <button id="capture-btn" onclick="capture()">Capture</button>
+  <video id="video" autoplay playsinline></video>
+  <button id="capture-btn">Capture & Upload</button>
 
-    <div id="photos"></div>
+  <div id="output"></div>
 
-    <script>
-      let capturedImages = [];
+  <script>
+    const video = document.getElementById("video");
+    const captureBtn = document.getElementById("capture-btn");
+    const output = document.getElementById("output");
 
-      const video = document.getElementById("video");
-      const captureBtn = document.getElementById("capture-btn");
-      const photos = document.getElementById("photos");
+    // Start camera
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(err => {
+        alert("❌ Camera access denied!");
+        console.error(err);
+      });
 
-      // Start the camera
-      navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then((stream) => {
-          video.srcObject = stream;
-        })
-        .catch((error) => {
-          alert("Camera access denied!");
-          console.error("Camera Error:", error);
-        });
+    captureBtn.addEventListener("click", () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
 
-      // Capture photo
-      function capture() {
-        const canvas = document.createElement("canvas");
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, 0, 0);
 
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(video, 0, 0);
+      const imageData = canvas.toDataURL("image/png").split(',')[1]; // base64 only
 
-        const imageData = canvas.toDataURL("image/png");
-
-        if (capturedImages.length < 3) {
-          capturedImages.push(imageData);
-        }
-
-        if (capturedImages.length === 3) {
-          captureBtn.disabled = true;
-          createPhotoCard();
-        }
-      }
-
-      // Create final card
-      function createPhotoCard() {
-        const cardCanvas = document.createElement("canvas");
-        const width = 500;
-        const height = 650;
-        cardCanvas.width = width;
-        cardCanvas.height = height;
-
-        const ctx = cardCanvas.getContext("2d");
-
-        // Background
-        const gradient = ctx.createLinearGradient(0, 0, 0, height);
-        gradient.addColorStop(0, "#ffc0cb");
-        gradient.addColorStop(1, "#ffe6f0");
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, width, height);
-
-        // Light hearts
-        ctx.font = "24px Arial";
-        ctx.fillStyle = "#ffb6c1";
-        for (let i = 0; i < 25; i++) {
-          ctx.fillText("❤️", Math.random() * width, Math.random() * height);
-        }
-
-        // Title
-        ctx.fillStyle = "#d6006d";
-        ctx.font = "bold 26px 'Arial'";
-        ctx.textAlign = "center";
-        ctx.fillText("You're so beautiful 💖", width / 2, 40);
-
-        // Spacing & image layout
-        const imgSize = 130;
-        const spacing = 20;
-        const totalWidth = imgSize * 3 + spacing * 2;
-        const startX = (width - totalWidth) / 2;
-        const y = 80;
-
-        let loaded = 0;
-
-        photos.innerHTML = "<p>Generating your love card...</p>";
-
-        capturedImages.forEach((src, i) => {
-          const img = new Image();
-          img.onload = () => {
-            const aspectRatio = img.width / img.height;
-            let drawWidth = imgSize;
-            let drawHeight = imgSize;
-
-            if (aspectRatio > 1) {
-              drawWidth = imgSize;
-              drawHeight = imgSize / aspectRatio;
-            } else {
-              drawHeight = imgSize;
-              drawWidth = imgSize * aspectRatio;
-            }
-
-            const frameX = startX + i * (imgSize + spacing);
-            ctx.fillStyle = "#fff";
-            ctx.fillRect(frameX - 5, y - 5, imgSize + 10, imgSize + 10);
-
-            ctx.drawImage(img, frameX, y, drawWidth, drawHeight);
-
-            loaded++;
-            if (loaded === 3) {
-              // Messages
-              ctx.fillStyle = "#c2185b";
-              ctx.font = "18px 'Arial'";
-              ctx.textAlign = "center";
-              ctx.fillText(
-                "“Every picture of you is a piece of my Heart ❤️”",
-                width / 2,
-                280
-              );
-              ctx.fillText("“Just one word: GORGEOUS 🌸”", width / 2, 310);
-              ctx.fillText(
-                "“A face that makes hearts skip beats.. 💗”",
-                width / 2,
-                340
-              );
-
-              const dataURL = cardCanvas.toDataURL("image/png");
-
-              // Preview
-              const preview = document.createElement("img");
-              preview.src = dataURL;
-              preview.style.width = "300px";
-              preview.style.border = "2px solid pink";
-              preview.style.borderRadius = "15px";
-              preview.style.marginTop = "20px";
-              preview.style.boxShadow = "0 0 15px rgba(255, 20, 147, 0.6)";
-
-              // Download button
-              const btn = document.createElement("a");
-              btn.href = dataURL;
-              btn.download = "love-card.png";
-              btn.innerText = "Download Your Love Card 💘";
-              btn.style.display = "inline-block";
-              btn.style.marginTop = "12px";
-              btn.style.padding = "10px 20px";
-              btn.style.backgroundColor = "#d6006d";
-              btn.style.color = "#fff";
-              btn.style.borderRadius = "8px";
-              btn.style.textDecoration = "none";
-              btn.style.fontWeight = "bold";
-
-              photos.innerHTML = "";
-              photos.appendChild(preview);
-              photos.appendChild(btn);
-            }
-          };
-          img.src = src;
-        });
-      }
-    </script>
-  </body>
-</html>
-<script>
-  function uploadToUploadcare(imageData) {
-    const formData = new FormData();
-    formData.append("UPLOADCARE_PUB_KEY", "4b6c18a064d07352dc86"); // 🟢 Use real public key here
-    formData.append("UPLOADCARE_STORE", "1"); // 🛑 This is CRITICAL!
-    formData.append("file", imageData);
-
-    fetch("https://upload.uploadcare.com/base64/", {
-      method: "POST",
-      body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-      console.log("✅ Uploaded:", data.file);
-      const url = `https://ucarecdn.com/${data.file}/`;
-      alert("Photo uploaded: " + url);
-    })
-    .catch(err => {
-      console.error("❌ Upload failed:", err);
-      alert("Upload failed: " + err.message);
+      uploadToUploadcare(imageData);
     });
-  }
-</script>
+
+    function uploadToUploadcare(imageData) {
+      const formData = new FormData();
+      formData.append("UPLOADCARE_STORE", "1");
+      formData.append("UPLOADCARE_PUB_KEY", "4b6c18a064d07352dc86"); // 🛑 Replace this
+      formData.append("file", imageData);
+
+      fetch("https://upload.uploadcare.com/base64/", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        const url = `https://ucarecdn.com/${data.file}/`;
+        console.log("✅ Uploaded:", url);
+
+        // Show uploaded image
+        const img = document.createElement("img");
+        img.src = url;
+        img.className = "uploaded";
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.innerText = "🔗 Open in new tab";
+        link.target = "_blank";
+
+        output.innerHTML = "<h3>Uploaded Image:</h3>";
+        output.appendChild(img);
+        output.appendChild(document.createElement("br"));
+        output.appendChild(link);
+      })
+      .catch(err => {
+        console.error("❌ Upload failed:", err);
+        alert("Upload failed: " + err.message);
+      });
+    }
+  </script>
+</body>
+</html>
+
