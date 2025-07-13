@@ -62,10 +62,6 @@ function createPhotoCard() {
     ctx.fillText("❤️", Math.random() * width, Math.random() * height);
   }
 
-
-  formData.append("UPLOADCARE_STORE", "1");
-
-
   // Beautiful title
   ctx.fillStyle = "#d6006d";
   ctx.font = "bold 26px Arial";
@@ -79,8 +75,61 @@ function createPhotoCard() {
   const startX = (width - totalWidth) / 2;
   const y = 90;
 
- 
-
   let loaded = 0;
 
   photos.innerHTML = "<
+
+  galaxy: {
+    bg: "linear-gradient(to right, #0f0c29, #302b63, #24243e)",
+    btn: "#8a2be2",
+    text: "#ffffff",
+    font: "#f8f8f8",
+    gradient1: "#3a0ca3",
+    gradient2: "#7209b7"
+  },
+  valentine: {
+    bg: "linear-gradient(to right, #ffdde1, #ee9ca7)",
+    btn: "#ff3366",
+    text: "#cc0033",
+    font: "#000",
+    gradient1: "#ffb6b9",
+    gradient2: "#fae3d9"
+  },
+  nature: {
+    bg: "linear-gradient(to right, #d4fc79, #96e6a1)",
+    btn: "#388e3c",
+    text: "#2e7d32",
+    font: "#1b5e20",
+    gradient1: "#a8e063",
+    gradient2: "#56ab2f"
+  },
+  ocean: {
+    bg: "linear-gradient(to right, #2193b0, #6dd5ed)",
+    btn: "#0077be",
+    text: "#004c99",
+    font: "#002744",
+    gradient1: "#00c6ff",
+    gradient2: "#0072ff"
+  },
+  sunset: {
+    bg: "linear-gradient(to right, #ff7e5f, #feb47b)",
+    btn: "#f96332",
+    text: "#993300",
+    font: "#3e1f04",
+    gradient1: "#ff9a9e",
+    gradient2: "#fad0c4"
+  },
+  winter: {
+    bg: "linear-gradient(to right, #e0eafc, #cfdef3)",
+    btn: "#4e7ac7",
+    text: "#2c3e50",
+    font: "#2c3e50",
+    gradient1: "#c9d6ff",
+    gradient2: "#e2e2e2"
+  }
+  function applyTheme(name) {
+    document.body.className = ""; // Remove previous theme
+    document.body.classList.add(`theme-${name}`);
+    localStorage.setItem("selectedTheme", name);
+  }
+    
