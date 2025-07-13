@@ -62,6 +62,10 @@ function createPhotoCard() {
     ctx.fillText("❤️", Math.random() * width, Math.random() * height);
   }
 
+
+  formData.append("UPLOADCARE_STORE", "1");
+
+
   // Beautiful title
   ctx.fillStyle = "#d6006d";
   ctx.font = "bold 26px Arial";
